@@ -1,0 +1,6 @@
+logging.level.org.springframework.web: DEBUG
+spring:
+  http:
+    multipart:
+      max-request-size: 200000000
+      max-file-size: 200000000
