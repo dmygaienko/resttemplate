@@ -1,5 +1,7 @@
 package com.mygaienko;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.mygaienko.api.dto.DownloadFileResponse;
 import com.mygaienko.api.dto.FileResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,6 +85,14 @@ public class FileControllerTest {
         HttpEntity requestEntity = new HttpEntity(fileRequest, headers);
         ResponseEntity<FileResponse> response = restTemplate.exchange(
                 "http://localhost:8080/file/uploadSimple", HttpMethod.POST, requestEntity, FileResponse.class);
+
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void testDownload() throws IOException, URISyntaxException {
+        ResponseEntity<DownloadFileResponse> response = restTemplate.exchange(
+                "http://localhost:8080/file/download", HttpMethod.GET, null, DownloadFileResponse.class);
 
         System.out.println(response.getBody());
     }
