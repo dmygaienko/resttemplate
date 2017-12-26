@@ -30,6 +30,7 @@ public class FileController {
     @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
     public FileResponse uploadFile(@ModelAttribute FileRequest request) throws IOException {
         System.out.println(Arrays.toString(request.getFile().getBytes()));
+//        System.out.println(Arrays.toString(request.getFile()));
         System.out.println(request.getSystemName());
         return new FileResponse("uploaded");
     }
