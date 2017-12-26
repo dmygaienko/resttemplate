@@ -1,13 +1,16 @@
 package com.mygaienko;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mygaienko.api.dto.DownloadFileResponse;
 import com.mygaienko.api.dto.FileResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -60,9 +63,16 @@ public class FileControllerTest {
         URL resource = getClass().getResource(fileName);
 
         MultiValueMap<String, Object> fileRequest = new LinkedMultiValueMap<>();
-        fileRequest.add("file", new FileSystemResource(new File(resource.getPath())));
-//        fileRequest.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(resource.toURI()))));
-        fileRequest.add("systemName", "sysName");
+//        fileRequest.add("file", new FileSystemResource(new File(resource.getPath())));
+        fileRequest.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(resource.toURI()))));
+//        fileRequest.add("systemName", "sysName");
+
+//        FileRequest fileRequest = new FileRequest();
+//        fileRequest.setSystemName("sysName");
+//        File file = new File(resource.toURI());
+//        FileItem fileItem = new DiskFileItem("file", "pdf", true, fileName, (int) file.length(), file.getParentFile());
+//        fileItem.getOutputStream();
+//        fileRequest.setFile(new CommonsMultipartFile(fileItem));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -70,7 +80,7 @@ public class FileControllerTest {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileRequest, headers);
         ResponseEntity<FileResponse> response = restTemplate.exchange(
-                "http://localhost:8080/file/upload", HttpMethod.POST, requestEntity, FileResponse.class);
+                "http://localhost:18080/file/upload", HttpMethod.POST, requestEntity, FileResponse.class);
 
         System.out.println(response.getBody());
     }
@@ -154,9 +164,17 @@ public class FileControllerTest {
 //        MultipartFile file = new MockMultipartFile("pdf.pdf", Files.readAllBytes(Paths.get(resource.toURI())));
         /*FileRequest fileRequest = new FileRequest("sysName", file);
         HttpEntity<FileRequest> requestEntity = new HttpEntity<>(fileRequest);*/
+        String fileName1 = "fileName1";
 
         MultiValueMap<String, Object> fileRequest = new LinkedMultiValueMap<>();
-        fileRequest.add("file", new FileSystemResource(new File(resource.getPath())));
+//        fileRequest.add("file", new FileSystemResource(new File(resource.getPath())));
+        fileRequest.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(resource.toURI()))){
+            @Override
+            public String getFilename() {
+                return fileName1;
+            }
+        });
+//        fileRequest.add("file", Files.readAllBytes(Paths.get(resource.toURI())));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -164,7 +182,7 @@ public class FileControllerTest {
 
         HttpEntity requestEntity = new HttpEntity(fileRequest, headers);
         ResponseEntity<FileResponse> response = restTemplate.exchange(
-                "http://localhost:8080/file/uploadSimple", HttpMethod.POST, requestEntity, FileResponse.class);
+                "http://localhost:18080/file/uploadSimple", HttpMethod.POST, requestEntity, FileResponse.class);
 
         System.out.println(response.getBody());
     }

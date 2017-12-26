@@ -10,25 +10,26 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.MultipartFilter;
 
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+@EnableAutoConfiguration
 public class RestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestApplication.class, args);
     }
 
-    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipart = new CommonsMultipartResolver();
-        multipart.setMaxUploadSize(200 * 1024 * 1024);
-        return multipart;
-    }
-
-    @Bean
-    @Order(0)
-    public MultipartFilter multipartFilter() {
-        MultipartFilter multipartFilter = new MultipartFilter();
-        multipartFilter.setMultipartResolverBeanName("multipartResolver");
-        return multipartFilter;
-    }
+//    @Bean
+//    public CommonsMultipartResolver multipartResolver() {
+//        CommonsMultipartResolver multipart = new CommonsMultipartResolver();
+//        multipart.setMaxUploadSize(200 * 1024 * 1024);
+//        return multipart;
+//    }
+//
+//    @Bean
+//    @Order(0)
+//    public MultipartFilter multipartFilter() {
+//        MultipartFilter multipartFilter = new MultipartFilter();
+//        multipartFilter.setMultipartResolverBeanName("multipartResolver");
+//        return multipartFilter;
+//    }
 }
