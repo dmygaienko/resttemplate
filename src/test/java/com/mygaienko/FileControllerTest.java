@@ -59,13 +59,19 @@ public class FileControllerTest {
         sendFile("/oversize_pdf.pdf");
     }
 
-    private void sendFile(String fileName) throws URISyntaxException, IOException {
+    private void sendFile(final String fileName) throws URISyntaxException, IOException {
         URL resource = getClass().getResource(fileName);
 
         MultiValueMap<String, Object> fileRequest = new LinkedMultiValueMap<>();
 //        fileRequest.add("file", new FileSystemResource(new File(resource.getPath())));
-        fileRequest.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(resource.toURI()))));
-//        fileRequest.add("systemName", "sysName");
+        byte[] content = Files.readAllBytes(Paths.get(resource.toURI()));
+        fileRequest.add("file", new ByteArrayResource(content) {
+            @Override
+            public String getFilename() {
+                return fileName;
+            }
+        });
+        fileRequest.add("systemName", "sysName");
 
 //        FileRequest fileRequest = new FileRequest();
 //        fileRequest.setSystemName("sysName");
