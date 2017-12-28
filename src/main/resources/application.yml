@@ -1,6 +1,12 @@
-logging.level.org.springframework.web: DEBUG
+logging.level:
+  org.springframework.web: DEBUG
+  org.springframework.web.multipart.support: DEBUG
 spring:
   http:
     multipart:
       max-request-size: 200000000
       max-file-size: 200000000
+
+server.port: 18080
+
+
