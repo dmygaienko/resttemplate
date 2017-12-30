@@ -1,11 +1,16 @@
 package com.mygaienko.api.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.multipart.MultipartFile;
 
+@ApiModel("File Request")
 public class FileRequest {
 
+    @ApiModelProperty
     private String systemName;
 
+    @ApiModelProperty
     private MultipartFile file;
 
     public FileRequest(String systemName, MultipartFile file) {

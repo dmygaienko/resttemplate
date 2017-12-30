@@ -3,13 +3,16 @@ package com.mygaienko.api;
 import com.mygaienko.api.dto.DownloadFileResponse;
 import com.mygaienko.api.dto.FileRequest;
 import com.mygaienko.api.dto.FileResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -18,6 +21,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/file")
+@Api(value="file storage", description="file storage description")
 public class FileController {
 
     private final ServletContext servletContext;
@@ -28,6 +32,11 @@ public class FileController {
     }
 
     @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "upload file", response = FileResponse.class)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful upload"),
+            @ApiResponse(code = 403, message = "Not found")
+    })
     public FileResponse uploadFile(@ModelAttribute FileRequest request) throws IOException {
         System.out.println(Arrays.toString(request.getFile().getBytes()));
 //        System.out.println(Arrays.toString(request.getFile()));

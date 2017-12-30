@@ -1,8 +1,12 @@
 package com.mygaienko.api.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("File Response")
 public class FileResponse {
 
+    @ApiModelProperty
     private String result;
 
     public FileResponse() {
