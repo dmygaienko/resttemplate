@@ -3,10 +3,12 @@ package com.mygaienko.api;
 import com.mygaienko.api.dto.DownloadFileResponse;
 import com.mygaienko.api.dto.FileRequest;
 import com.mygaienko.api.dto.FileResponse;
+import com.mygaienko.api.dto.GenerateFileRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RestController
 @RequestMapping("/file")
 @Api(value="file storage", description="file storage description")
+@Slf4j
 public class FileController {
 
     private final ServletContext servletContext;
@@ -42,6 +45,17 @@ public class FileController {
 //        System.out.println(Arrays.toString(request.getFile()));
         System.out.println(request.getSystemName());
         return new FileResponse("uploaded");
+    }
+
+    @PostMapping(value = "/generate", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate file", response = FileResponse.class)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful generating"),
+            @ApiResponse(code = 404, message = "Not Found custom")
+    })
+    public FileResponse generateFile(@RequestBody GenerateFileRequest request) {
+        log.info("Generating " + request);
+        return new FileResponse("generated");
     }
 
     @PostMapping(value = "/uploadSimple", consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
