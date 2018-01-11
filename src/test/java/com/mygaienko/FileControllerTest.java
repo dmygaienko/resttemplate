@@ -9,10 +9,14 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -41,6 +45,20 @@ public class FileControllerTest {
                 "http://localhost:8080/file/get", HttpMethod.GET, null, FileResponse.class);
         System.out.println(response.getBody());
     }
+
+    @Test
+    public void testGetError() {
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<?> requestEntity = new HttpEntity<>(httpHeaders);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:18080/file/getError", HttpMethod.GET, requestEntity, String.class);
+        System.out.println(response.getBody());
+    }
+
 
     @Test
     public void testDelete() {
@@ -199,5 +217,37 @@ public class FileControllerTest {
                 "http://localhost:8080/file/download", HttpMethod.GET, null, DownloadFileResponse.class);
 
         System.out.println(response.getBody());
+    }
+
+    @Test
+    public void testDownloadSimpleError() throws IOException, URISyntaxException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PDF));
+//        httpHeaders.setAccept(Collections.singletonList(MediaType.ALL));
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:18080/file/download/error", HttpMethod.GET, new HttpEntity<>(httpHeaders), String.class);
+
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void testDownloadSimple() throws IOException, URISyntaxException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PDF));
+
+        ResponseEntity<byte[]> response = restTemplate.exchange(
+                "http://localhost:18080/file/download/simple", HttpMethod.GET, new HttpEntity<>(httpHeaders), byte[].class);
+
+        System.out.println(response);
+    }
+
+    private class CustomResponseErrorHandler extends DefaultResponseErrorHandler {
+
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            System.out.println("handled ololo");
+        }
     }
 }
