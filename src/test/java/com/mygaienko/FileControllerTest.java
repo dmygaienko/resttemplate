@@ -1,6 +1,8 @@
 package com.mygaienko;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mygaienko.api.dto.DownloadFileResponse;
+import com.mygaienko.api.dto.ErrorResponse;
 import com.mygaienko.api.dto.FileResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -224,12 +228,17 @@ public class FileControllerTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PDF));
 //        httpHeaders.setAccept(Collections.singletonList(MediaType.ALL));
-        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
+//        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                "http://localhost:18080/file/download/error", HttpMethod.GET, new HttpEntity<>(httpHeaders), String.class);
+        try {
+            ResponseEntity<byte[]> response = restTemplate.exchange(
+                    "http://localhost:18080/file/download/error", HttpMethod.GET, new HttpEntity<>(httpHeaders), byte[].class);
+        } catch (HttpClientErrorException e) {
+            ErrorResponse errorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), ErrorResponse.class);
 
-        System.out.println(response.getBody());
+            System.out.println("Deserialized errorResponse: " + errorResponse);
+        }
+
     }
 
     @Test

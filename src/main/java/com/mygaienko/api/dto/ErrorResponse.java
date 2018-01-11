@@ -5,6 +5,9 @@ public class ErrorResponse {
     private String service;
     private String errorMsg;
 
+    public ErrorResponse() {
+    }
+
     public ErrorResponse(String service, String errorMsg) {
         this.service = service;
         this.errorMsg = errorMsg;
@@ -24,5 +27,13 @@ public class ErrorResponse {
 
     public String getErrorMsg() {
         return errorMsg;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "service='" + service + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
+                '}';
     }
 }
