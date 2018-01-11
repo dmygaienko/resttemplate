@@ -82,8 +82,7 @@ public class FileController {
         return new DownloadFileResponse("fileName", fileBytes);
     }
 
-//    @GetMapping(value = "/download/{error}", produces = {APPLICATION_PDF_VALUE, APPLICATION_JSON_VALUE})
-    @GetMapping(value = "/download/{error}", produces = {APPLICATION_PDF_VALUE})
+    @GetMapping(value = "/download/{error}", produces = {APPLICATION_PDF_VALUE, APPLICATION_JSON_VALUE})
     public byte[] downloadSimple(@PathVariable String error) throws IOException {
         if ("ERROR".equalsIgnoreCase(error)) {
             throw new RuntimeException("custom error ololo");
