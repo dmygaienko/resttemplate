@@ -12,6 +12,34 @@ spring:
       max-request-size: 200000000
       max-file-size: 200000000
 
+  cloud:
+      stream:
+        bindings:
+          input:
+            destination: queue.log.messages
+            binder: local_rabbit
+#            group: logMessageConsumers
+          output:
+            destination: queue.pretty.log.messages
+            binder: local_rabbit
+        binders:
+          local_rabbit:
+            type: rabbit
+            environment:
+              spring:
+                rabbitmq:
+                  host: localhost
+                  port: 5672
+                  username: guest
+                  password: guest
+                  virtual-host: /
+
 server.port: 18080
 
+---
+
+spring:
+  profiles: test
+#  autoconfigure.exclude: org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
+  autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
